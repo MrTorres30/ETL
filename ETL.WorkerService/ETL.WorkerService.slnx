@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="ETL.Core/ETL.Core.csproj" />
   <Project Path="ETL.Extractors/ETL.Extractors.csproj" />
+  <Project Path="ETL.Staging/ETL.Staging.csproj" />
   <Project Path="ETL.WorkerService/ETL.WorkerService.csproj" />
 </Solution>

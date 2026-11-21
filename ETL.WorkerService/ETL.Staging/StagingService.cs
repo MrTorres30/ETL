@@ -81,10 +81,8 @@ namespace ETL.Staging
         }
         public async Task<int> GuardarComentariosAsync(IEnumerable<SocialCommentRawRecord> records, CancellationToken cancellationToken = default)
         {
-            // 1. Guardar copia en archivo temporal JSON
             string jsonPath = Path.Combine(_tempDirectory, $"social_comments_{DateTime.Now:yyyyMMdd_HHmmss}.json");
             await File.WriteAllTextAsync(jsonPath, JsonSerializer.Serialize(records, new JsonSerializerOptions { WriteIndented = true }), cancellationToken);
-            // 2. Insertar en tabla staging de SQL Server
             int count = 0;
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
