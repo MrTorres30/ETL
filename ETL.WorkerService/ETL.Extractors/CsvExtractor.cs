@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -26,7 +26,25 @@ namespace ETL.Extractors
             var records = new List<SurveyRawRecord>();
             try
             {
-                if (!File.Exists(_filePath))
+                string resolvedPath = _filePath;
+                if (!File.Exists(resolvedPath))
+                {
+                    resolvedPath = Path.Combine(AppContext.BaseDirectory, _filePath);
+                }
+                if (!File.Exists(resolvedPath))
+                {
+                    var dir = new DirectoryInfo(AppContext.BaseDirectory);
+                    while (dir != null && !File.Exists(Path.Combine(dir.FullName, _filePath)))
+                    {
+                        dir = dir.Parent;
+                    }
+                    if (dir != null)
+                    {
+                        resolvedPath = Path.Combine(dir.FullName, _filePath);
+                    }
+                }
+
+                if (!File.Exists(resolvedPath))
                 {
                     stopwatch.Stop();
                     return ExtractionResult<SurveyRawRecord>.Failure(
@@ -39,7 +57,7 @@ namespace ETL.Extractors
                     MissingFieldFound = null,
                     BadDataFound = null
                 };
-                using var reader = new StreamReader(_filePath);
+                using var reader = new StreamReader(resolvedPath);
                 using var csv = new CsvReader(reader, config);
                 await foreach (var record in csv.GetRecordsAsync<SurveyRawRecord>(cancellationToken))
                 {

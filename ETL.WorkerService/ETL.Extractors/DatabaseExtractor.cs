@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -35,12 +35,12 @@ namespace ETL.Extractors
                 {
                     records.Add(new WebReviewRawRecord
                     {
-                        IdReview = reader.GetString(reader.GetOrdinal("IdReview")),
-                        IdCliente = reader.IsDBNull(reader.GetOrdinal("IdCliente")) ? null : reader.GetString(reader.GetOrdinal("IdCliente")),
-                        IdProducto = reader.IsDBNull(reader.GetOrdinal("IdProducto")) ? null : reader.GetString(reader.GetOrdinal("IdProducto")),
-                        Fecha = reader.IsDBNull(reader.GetOrdinal("Fecha")) ? null : reader.GetDateTime(reader.GetOrdinal("Fecha")),
-                        Comentario = reader.IsDBNull(reader.GetOrdinal("Comentario")) ? string.Empty : reader.GetString(reader.GetOrdinal("Comentario")),
-                        Rating = reader.IsDBNull(reader.GetOrdinal("Rating")) ? null : reader.GetInt32(reader.GetOrdinal("Rating"))
+                        IdReview = Convert.ToString(reader["IdReview"]) ?? string.Empty,
+                        IdCliente = reader.IsDBNull(reader.GetOrdinal("IdCliente")) ? null : Convert.ToString(reader["IdCliente"]),
+                        IdProducto = reader.IsDBNull(reader.GetOrdinal("IdProducto")) ? null : Convert.ToString(reader["IdProducto"]),
+                        Fecha = reader.IsDBNull(reader.GetOrdinal("Fecha")) ? null : Convert.ToDateTime(reader["Fecha"]),
+                        Comentario = reader.IsDBNull(reader.GetOrdinal("Comentario")) ? string.Empty : Convert.ToString(reader["Comentario"]) ?? string.Empty,
+                        Rating = reader.IsDBNull(reader.GetOrdinal("Rating")) ? null : Convert.ToInt32(reader["Rating"])
                     });
                 }
                 stopwatch.Stop();
