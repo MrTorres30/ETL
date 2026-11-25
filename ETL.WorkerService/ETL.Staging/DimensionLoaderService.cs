@@ -20,10 +20,6 @@ namespace ETL.Staging
         public string? MensajeError { get; set; }
     }
 
-    /// <summary>
-    /// Servicio DataLoader para la carga inicial e incremental de dimensiones en el Data Warehouse.
-    /// Garantiza la integridad referencial previa a la ingesta de hechos.
-    /// </summary>
     public class DimensionLoaderService
     {
         private readonly string _connectionString;
@@ -85,7 +81,6 @@ namespace ETL.Staging
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
-            // Consultar IDs existentes para optimizar O(1)
             var existentes = new HashSet<int>();
             using (var cmdCheck = new SqlCommand("SELECT Id_Cliente FROM dbo.Clientes", conn))
             using (var reader = await cmdCheck.ExecuteReaderAsync(cancellationToken))
@@ -98,7 +93,7 @@ namespace ETL.Staging
 
             int count = 0;
             using var readerCsv = new StreamReader(ruta);
-            string? header = await readerCsv.ReadLineAsync(cancellationToken); // Saltear encabezado
+            string? header = await readerCsv.ReadLineAsync(cancellationToken);
 
             using var trans = conn.BeginTransaction();
             try

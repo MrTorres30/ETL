@@ -9,8 +9,6 @@ using ETL.Core;
 
 namespace ETL.Extractors
 {
-    /// Extractor para comentarios de redes sociales mediante consumo de una API REST.
-    /// Utiliza HttpClient para llamadas asincronas seguras con manejo de excepciones y timeout.
     public class ApiExtractor : IExtractor<SocialCommentRawRecord>
     {
         private readonly HttpClient _httpClient;
@@ -45,10 +43,8 @@ namespace ETL.Extractors
             }
             catch (Exception)
             {
-                // Si ocurre error de conexion o timeout, continua al fallback simulado
             }
 
-            // Fallback resiliente: garantiza datos cuando la API externa no esta activa o trabaja offline
             var mockData = new List<SocialCommentRawRecord>
             {
                 new() { IdComment = "API_001", IdCliente = "C019", IdProducto = "P003", Fuente = "Instagram API", Fecha = DateTime.Now, Comentario = "Excelente producto recibido via API REST." },

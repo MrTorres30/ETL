@@ -52,7 +52,6 @@ namespace ETL.WorkerService
 
                 try
                 {
-                    // 1. CARGA DE DIMENSIONES DEL DATA WAREHOUSE (DataLoader previo a hechos)
                     _logger.LogInformation("--- [DataLoader] Verificando y cargando dimensiones maestras en Data Warehouse ---");
                     var dimSummary = await _dimensionLoader.CargarTodasLasDimensionesAsync(stoppingToken);
                     if (dimSummary.Exitoso)
@@ -67,7 +66,6 @@ namespace ETL.WorkerService
                         _logger.LogWarning("⚠️ [DataLoader] Advertencia en carga de dimensiones: {error}", dimSummary.MensajeError);
                     }
 
-                    // 2. EXTRACCIÓN CONCURRENTE EN PARALELO DE HECHOS / STAGING
                     _logger.LogInformation("--- [Extracción] Ejecución asíncrona concurrente de fuentes de hechos ---");
                     var csvTask = _csvExtractor.ExtractAsync(stoppingToken);
                     var dbTask = _dbExtractor.ExtractAsync(stoppingToken);
@@ -79,7 +77,6 @@ namespace ETL.WorkerService
                     var dbResult = await dbTask;
                     var apiResult = await apiTask;
 
-                    // 1. Procesar Fuente: CSV Encuestas
                     if (csvResult.IsSuccess)
                     {
                         int inserted = await _stagingService.GuardarEncuestasAsync(csvResult.Data, stoppingToken);
@@ -91,7 +88,6 @@ namespace ETL.WorkerService
                         _logger.LogWarning(" [{source}] Fallo en extraccion: {error}", csvResult.SourceName, csvResult.ErrorMessage);
                     }
 
-                    // 2. Procesar Fuente: Base de Datos Reseñas
                     if (dbResult.IsSuccess)
                     {
                         int inserted = await _stagingService.GuardarResenasAsync(dbResult.Data, stoppingToken);
@@ -103,7 +99,6 @@ namespace ETL.WorkerService
                         _logger.LogWarning(" [{source}] Fallo en extraccion: {error}", dbResult.SourceName, dbResult.ErrorMessage);
                     }
 
-                    // 3. Procesar Fuente: API REST Comentarios
                     if (apiResult.IsSuccess)
                     {
                         int inserted = await _stagingService.GuardarComentariosAsync(apiResult.Data, stoppingToken);

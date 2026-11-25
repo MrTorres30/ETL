@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -8,8 +8,6 @@ using Microsoft.Data.SqlClient;
 using ETL.Core;
 namespace ETL.Staging
 {
-    /// Servicio de Staging encargado de persistir los datos crudos extraídos
-    /// Cumple con el requerimiento de almacenamiento temporal de la práctica.
     public class StagingService
     {
         private readonly string _connectionString;
@@ -54,10 +52,9 @@ namespace ETL.Staging
         }
         public async Task<int> GuardarResenasAsync(IEnumerable<WebReviewRawRecord> records, CancellationToken cancellationToken = default)
         {
-            // Guarda una copia en un archivo temporal JSON
             string jsonPath = Path.Combine(_tempDirectory, $"web_reviews_{DateTime.Now:yyyyMMdd_HHmmss}.json");
             await File.WriteAllTextAsync(jsonPath, JsonSerializer.Serialize(records, new JsonSerializerOptions { WriteIndented = true }), cancellationToken);
-            // 2. Insertar en tabla staging de SQL Server
+
             int count = 0;
             using var conn = new SqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
