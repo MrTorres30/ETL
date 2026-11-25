@@ -12,10 +12,11 @@ var builder = Host.CreateApplicationBuilder(args);
 // 1. Inyeccion de IHttpClientFactory para consumo de API REST
 builder.Services.AddHttpClient();
 
-// 2. Inyeccion del servicio de Staging
+// 2. Inyeccion del servicio de Staging y DataLoader de Dimensiones
 var connectionString = builder.Configuration.GetConnectionString("OpinionsDb") 
     ?? "Server=MSI\\SQLEXPRESS;Database=OpinionsBd;Trusted_Connection=True;TrustServerCertificate=True;";
 builder.Services.AddSingleton(new StagingService(connectionString));
+builder.Services.AddSingleton(new DimensionLoaderService(connectionString));
 
 // 3. Inyeccion de los 3 Extractores (Inversion de dependencias)
 var surveysPath = builder.Configuration["EtlSettings:SurveysFilePath"] ?? "data/surveys_part1.csv";

@@ -54,8 +54,10 @@ namespace ETL.Extractors
                 {
                     HasHeaderRecord = true,
                     Delimiter = ",",
+                    HeaderValidated = null,
                     MissingFieldFound = null,
-                    BadDataFound = null
+                    BadDataFound = null,
+                    PrepareHeaderForMatch = args => args.Header.Replace("ó", "o").Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ú", "u").Trim()
                 };
                 using var reader = new StreamReader(resolvedPath);
                 using var csv = new CsvReader(reader, config);

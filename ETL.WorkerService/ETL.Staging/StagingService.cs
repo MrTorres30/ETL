@@ -54,7 +54,7 @@ namespace ETL.Staging
         }
         public async Task<int> GuardarResenasAsync(IEnumerable<WebReviewRawRecord> records, CancellationToken cancellationToken = default)
         {
-            // Guardar copia en un archivo temporal JSON
+            // Guarda una copia en un archivo temporal JSON
             string jsonPath = Path.Combine(_tempDirectory, $"web_reviews_{DateTime.Now:yyyyMMdd_HHmmss}.json");
             await File.WriteAllTextAsync(jsonPath, JsonSerializer.Serialize(records, new JsonSerializerOptions { WriteIndented = true }), cancellationToken);
             // 2. Insertar en tabla staging de SQL Server

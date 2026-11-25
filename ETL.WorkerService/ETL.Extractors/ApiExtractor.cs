@@ -9,10 +9,8 @@ using ETL.Core;
 
 namespace ETL.Extractors
 {
-    /// <summary>
     /// Extractor para comentarios de redes sociales mediante consumo de una API REST.
     /// Utiliza HttpClient para llamadas asincronas seguras con manejo de excepciones y timeout.
-    /// </summary>
     public class ApiExtractor : IExtractor<SocialCommentRawRecord>
     {
         private readonly HttpClient _httpClient;
