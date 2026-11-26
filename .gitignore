@@ -485,3 +485,9 @@ $RECYCLE.BIN/
 temp_staging/
 **/temp_staging/
 
+# Local documents
+docs/
+**/docs/
+*.docx
+*.pdf
+
