@@ -56,14 +56,14 @@ namespace ETL.WorkerService
                     var dimSummary = await _dimensionLoader.CargarTodasLasDimensionesAsync(stoppingToken);
                     if (dimSummary.Exitoso)
                     {
-                        _logger.LogInformation("📦 [DataLoader] Dimensiones cargadas exitosamente en {ms:F2} ms:", dimSummary.TiempoTotal.TotalMilliseconds);
+                        _logger.LogInformation("[DataLoader] Dimensiones cargadas exitosamente en {ms:F2} ms:", dimSummary.TiempoTotal.TotalMilliseconds);
                         _logger.LogInformation("   -> Dimensión Clientes (dbo.Clientes): {count} filas procesadas/aseguradas.", dimSummary.ClientesCargados);
                         _logger.LogInformation("   -> Dimensión Producto (dbo.Producto): {count} filas procesadas/aseguradas.", dimSummary.ProductosCargados);
                         _logger.LogInformation("   -> Dimensión Fuente_Datos (dbo.Fuente_Datos): {count} filas procesadas/aseguradas.", dimSummary.FuentesCargadas);
                     }
                     else
                     {
-                        _logger.LogWarning("⚠️ [DataLoader] Advertencia en carga de dimensiones: {error}", dimSummary.MensajeError);
+                        _logger.LogWarning("[DataLoader] Advertencia en carga de dimensiones: {error}", dimSummary.MensajeError);
                     }
 
                     _logger.LogInformation("--- [Extracción] Ejecución asíncrona concurrente de fuentes de hechos ---");
@@ -102,7 +102,7 @@ namespace ETL.WorkerService
                     if (apiResult.IsSuccess)
                     {
                         int inserted = await _stagingService.GuardarComentariosAsync(apiResult.Data, stoppingToken);
-                        _logger.LogInformation("✔️ [{source}] {count} registros extraidos en {ms:F2} ms -> Staging: {inserted} insertados.",
+                        _logger.LogInformation(" [{source}] {count} registros extraidos en {ms:F2} ms -> Staging: {inserted} insertados.",
                             apiResult.SourceName, apiResult.RecordsCount, apiResult.ElapsedTime.TotalMilliseconds, inserted);
                     }
                     else
